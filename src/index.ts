@@ -31,13 +31,15 @@ export async function runScrapingProcess() {
         const filteredAnalysisResults = analysisResults.filter((r) => !newIds.includes(r.postId));
 
         if (filteredAnalysisResults.length > 0) {
-          await storeResults(filteredAnalysisResults.map((r) => ({
-            date: new Date().toISOString(),
-            subreddit: r.subreddit,
-            postId: r.postId,
-            title: r.title,
-            ideas: r.ideas,
-          })));
+          await storeResults(
+            filteredAnalysisResults.map((r) => ({
+              date: new Date().toISOString(),
+              subreddit: r.subreddit,
+              postId: r.postId,
+              title: r.title,
+              ideas: r.ideas,
+            })),
+          );
 
           console.log(`Guardados ${filteredAnalysisResults.length} resultados de r/${subreddit} (${category}).`);
 
@@ -79,13 +81,15 @@ export async function runSearchProcess() {
       const filteredAnalysisResults = analysisResults.filter((r) => !newIds.includes(r.postId));
 
       if (filteredAnalysisResults.length > 0) {
-        await storeResults(filteredAnalysisResults.map((r) => ({
-          date: new Date().toISOString(),
-          subreddit: r.subreddit,
-          postId: r.postId,
-          title: r.title,
-          ideas: r.ideas,
-        })));
+        await storeResults(
+          filteredAnalysisResults.map((r) => ({
+            date: new Date().toISOString(),
+            subreddit: r.subreddit,
+            postId: r.postId,
+            title: r.title,
+            ideas: r.ideas,
+          })),
+        );
 
         console.log(`Guardados ${filteredAnalysisResults.length} resultados para la keyword "${keyword}".`);
 
