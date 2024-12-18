@@ -27,25 +27,21 @@ export async function runScrapingProcess() {
         }
 
         const analysisResults = analyzeData(subreddit, postsWithComments);
+        const newIds = analysisResults.map((r) => r.postId);
+        const filteredAnalysisResults = analysisResults.filter((r) => !newIds.includes(r.postId));
 
-        if (analysisResults.length > 0) {
-          const newIds = analysisResults.map((r) => r.postId);
+        if (filteredAnalysisResults.length > 0) {
+          await storeResults(filteredAnalysisResults.map((r) => ({
+            date: new Date().toISOString(),
+            subreddit: r.subreddit,
+            postId: r.postId,
+            title: r.title,
+            ideas: r.ideas,
+          })));
 
-          await storeResults(
-            analysisResults
-              .filter((r) => !newIds.includes(r.postId))
-              .map((r) => ({
-                date: new Date().toISOString(),
-                subreddit: r.subreddit,
-                postId: r.postId,
-                title: r.title,
-                ideas: r.ideas,
-              })),
-          );
+          console.log(`Guardados ${filteredAnalysisResults.length} resultados de r/${subreddit} (${category}).`);
 
-          console.log(`Guardados ${analysisResults.length} resultados de r/${subreddit} (${category}).`);
-
-          await saveAnalyzedIds(newIds);
+          await saveAnalyzedIds(filteredAnalysisResults.map((r) => r.postId));
         } else {
           console.log(`No se encontraron ideas en r/${subreddit} (${category}) esta vez.`);
         }
@@ -79,25 +75,21 @@ export async function runSearchProcess() {
       }
 
       const analysisResults = analyzeData(undefined, postsWithComments);
+      const newIds = analysisResults.map((r) => r.postId);
+      const filteredAnalysisResults = analysisResults.filter((r) => !newIds.includes(r.postId));
 
-      if (analysisResults.length > 0) {
-        const newIds = analysisResults.map((r) => r.postId);
+      if (filteredAnalysisResults.length > 0) {
+        await storeResults(filteredAnalysisResults.map((r) => ({
+          date: new Date().toISOString(),
+          subreddit: r.subreddit,
+          postId: r.postId,
+          title: r.title,
+          ideas: r.ideas,
+        })));
 
-        await storeResults(
-          analysisResults
-            .filter((r) => !newIds.includes(r.postId))
-            .map((r) => ({
-              date: new Date().toISOString(),
-              subreddit: r.subreddit,
-              postId: r.postId,
-              title: r.title,
-              ideas: r.ideas,
-            })),
-        );
+        console.log(`Guardados ${filteredAnalysisResults.length} resultados para la keyword "${keyword}".`);
 
-        console.log(`Guardados ${analysisResults.length} resultados para la keyword "${keyword}".`);
-
-        await saveAnalyzedIds(newIds);
+        await saveAnalyzedIds(filteredAnalysisResults.map((r) => r.postId));
       } else {
         console.log(`No se encontraron ideas para la keyword "${keyword}".`);
       }
