@@ -3,9 +3,7 @@ import { getAccessToken } from './redditAuth';
 import { delay } from './utils';
 
 const BASE_URL = 'https://oauth.reddit.com';
-
-// Ajusta el delay según tus necesidades.
-const REQUEST_DELAY = 2000; // 2s entre solicitudes ~30 requests/min máx.
+const REQUEST_DELAY = 2000; // Adjust the delay according to your needs
 
 export async function fetchSubredditPosts(subreddit: string, category: string, limit: number = 50): Promise<any[]> {
   const token = await getAccessToken();
