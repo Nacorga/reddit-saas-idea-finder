@@ -14,10 +14,8 @@ interface IdeaRecord {
 
 export async function storeResults(results: IdeaRecord[]): Promise<void> {
   let existing: IdeaRecord[] = [];
-
   try {
     const data = await fs.readFile(DATA_FILE, 'utf8');
-
     existing = JSON.parse(data);
   } catch (error: any) {
     if (error.code === 'ENOENT') {
@@ -27,9 +25,13 @@ export async function storeResults(results: IdeaRecord[]): Promise<void> {
     }
   }
 
-  existing.push(...results);
+  const existingIds = new Set(existing.map((r) => r.postId));
+  const filteredResults = results.filter((r) => !existingIds.has(r.postId));
 
-  await fs.writeFile(DATA_FILE, JSON.stringify(existing, null, 2), 'utf8');
+  if (filteredResults.length > 0) {
+    existing.push(...filteredResults);
+    await fs.writeFile(DATA_FILE, JSON.stringify(existing, null, 2), 'utf8');
+  }
 }
 
 export async function getAnalyzedIds(): Promise<Set<string>> {

@@ -6,14 +6,13 @@ import { startScheduler } from './scheduler';
 
 export async function runScrapingProcess() {
   const analyzedIds = await getAnalyzedIds();
-
   for (const subreddit of SUBREDDITS) {
     for (const category of CATEGORIES) {
       console.log(`Analizando r/${subreddit} en categoría ${category}...`);
       try {
         const posts = await fetchSubredditPosts(subreddit, category, 50);
-        const postsWithComments = [];
 
+        const postsWithComments = [];
         for (const p of posts) {
           if (!analyzedIds.has(p.id)) {
             const comments = await fetchPostComments(p.id);
@@ -27,12 +26,9 @@ export async function runScrapingProcess() {
         }
 
         const analysisResults = analyzeData(subreddit, postsWithComments);
-        const newIds = analysisResults.map((r) => r.postId);
-        const filteredAnalysisResults = analysisResults.filter((r) => !newIds.includes(r.postId));
-
-        if (filteredAnalysisResults.length > 0) {
+        if (analysisResults.length > 0) {
           await storeResults(
-            filteredAnalysisResults.map((r) => ({
+            analysisResults.map((r) => ({
               date: new Date().toISOString(),
               subreddit: r.subreddit,
               postId: r.postId,
@@ -40,10 +36,10 @@ export async function runScrapingProcess() {
               ideas: r.ideas,
             })),
           );
+          console.log(`Guardados ${analysisResults.length} resultados de r/${subreddit} (${category}).`);
 
-          console.log(`Guardados ${filteredAnalysisResults.length} resultados de r/${subreddit} (${category}).`);
-
-          await saveAnalyzedIds(filteredAnalysisResults.map((r) => r.postId));
+          const newIds = analysisResults.map((r) => r.postId);
+          await saveAnalyzedIds(newIds);
         } else {
           console.log(`No se encontraron ideas en r/${subreddit} (${category}) esta vez.`);
         }
@@ -57,16 +53,13 @@ export async function runScrapingProcess() {
 export async function runSearchProcess() {
   const analyzedIds = await getAnalyzedIds();
   console.log('Ejecutando búsquedas por palabras clave...');
-
   for (const keyword of KEYWORDS) {
     try {
       const searchResults = await searchReddit(keyword, 50);
       const postsWithComments = [];
-
       for (const p of searchResults) {
         if (!analyzedIds.has(p.id)) {
           const comments = await fetchPostComments(p.id);
-
           postsWithComments.push({
             id: p.id,
             title: p.title || '',
@@ -77,12 +70,9 @@ export async function runSearchProcess() {
       }
 
       const analysisResults = analyzeData(undefined, postsWithComments);
-      const newIds = analysisResults.map((r) => r.postId);
-      const filteredAnalysisResults = analysisResults.filter((r) => !newIds.includes(r.postId));
-
-      if (filteredAnalysisResults.length > 0) {
+      if (analysisResults.length > 0) {
         await storeResults(
-          filteredAnalysisResults.map((r) => ({
+          analysisResults.map((r) => ({
             date: new Date().toISOString(),
             subreddit: r.subreddit,
             postId: r.postId,
@@ -90,10 +80,10 @@ export async function runSearchProcess() {
             ideas: r.ideas,
           })),
         );
+        console.log(`Guardados ${analysisResults.length} resultados para la keyword "${keyword}".`);
 
-        console.log(`Guardados ${filteredAnalysisResults.length} resultados para la keyword "${keyword}".`);
-
-        await saveAnalyzedIds(filteredAnalysisResults.map((r) => r.postId));
+        const newIds = analysisResults.map((r) => r.postId);
+        await saveAnalyzedIds(newIds);
       } else {
         console.log(`No se encontraron ideas para la keyword "${keyword}".`);
       }
