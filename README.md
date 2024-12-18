@@ -4,13 +4,13 @@
 
 - Accessing the Reddit API using client credentials and renewable access tokens.
 - Exploring multiple relevant subreddits in startup, business, and technology domains.
-- Analyzing various post categories (\`new\`, \`hot\`, \`top\`, \`rising\`) within each subreddit.
+- Analyzing various post categories (`new`, `hot`, `top`, `rising`) within each subreddit.
 - Fetching post titles, bodies, and comments for deeper insights.
 - Identifying keywords (in both English and Spanish) that indicate frustrations, unmet needs, or expensive solutions.
 - Performing global keyword searches on Reddit.
 - Avoiding reprocessing the same posts by storing analyzed post IDs.
 - Scheduling recurring analyses (e.g., every 6 hours) and adding delays to comply with Reddit API rate limits.
-- Storing results in a \`data.json\` file for further examination.
+- Storing results in a `data.json` file for further examination.
 
 ## Key Features
 
@@ -20,7 +20,7 @@
 - **Global Keyword Searches:** Leverages the entire Reddit platform, not just specific subreddits.
 - **Data Persistence:** Prevents re-analyzing the same posts, optimizing performance.
 - **Rate Limit Compliance:** Delays requests to respect Reddit’s API constraints.
-- **Automated Scheduling:** Runs analyses periodically via \`node-cron\`.
+- **Automated Scheduling:** Runs analyses periodically via `node-cron`.
 
 ## Prerequisites
 
@@ -28,49 +28,49 @@
 - **npm:** For dependency management.
 - **Reddit API Credentials:**  
   Create a "script" type application at [Reddit Apps](https://www.reddit.com/prefs/apps) to obtain:
-  - \`REDDIT_CLIENT_ID\`
-  - \`REDDIT_SECRET\`
+  - `REDDIT_CLIENT_ID`
+  - `REDDIT_SECRET`
 
 ## Installation
 
 1. **Clone the repository:**
-   \`\`\`bash
+   ```bash
    git clone https://github.com/your-username/reddit-saas-idea-finder.git
    cd reddit-saas-idea-finder
-   \`\`\`
+   ```
 
 2. **Install dependencies:**
-   \`\`\`bash
+   ```bash
    npm install
-   \`\`\`
+   ```
 
 3. **Set environment variables:**
-   Create a \`.env\` file in the project root:
-   \`\`\`env
+   Create a `.env` file in the project root:
+   ```env
    REDDIT_CLIENT_ID=your_client_id
    REDDIT_SECRET=your_client_secret
-   \`\`\`
+   ```
 
 4. **Optional Configurations:**
-   Edit \`src/config.ts\` to modify subreddits, categories, keywords, or delay times.
+   Edit `src/config.ts` to modify subreddits, categories, keywords, or delay times.
 
 ## Usage
 
 - **Compile TypeScript to JavaScript:**
-  \`\`\`bash
+  ```bash
   npx tsc
   node dist/index.js
-  \`\`\`
+  ```
 
 - **Run directly with ts-node:**
-  \`\`\`bash
+  ```bash
   npx ts-node src/index.ts
-  \`\`\`
+  ```
 
 ## How It Works
 
 1. **Reddit Authentication:**  
-   Obtains an access token via \`client_credentials\`.
+   Obtains an access token via `client_credentials`.
 
 2. **Data Retrieval:**  
    Fetches posts and comments across selected subreddits and categories.
@@ -79,7 +79,7 @@
    Searches for specific keywords signaling unmet needs, frustration, or expensive solutions.
 
 4. **Result Storage:**  
-   Saves findings in \`data.json\`, including:
+   Saves findings in `data.json`, including:
    - Timestamp
    - Subreddit (if applicable)
    - Post ID
@@ -87,13 +87,13 @@
    - Detected Keywords
 
 5. **No Repeated Analysis:**  
-   Records analyzed post IDs in \`analyzedIds.json\` to prevent duplicates.
+   Records analyzed post IDs in `analyzedIds.json` to prevent duplicates.
 
 6. **Keyword Searches:**  
    Performs global searches on Reddit using predefined keywords.
 
 7. **Scheduled Runs:**  
-   Uses \`node-cron\` to run analyses periodically (default: every 6 hours).
+   Uses `node-cron` to run analyses periodically (default: every 6 hours).
 
 ## Rate Limit Compliance
 
@@ -101,10 +101,10 @@ The application includes a default 2-second delay between requests, significantl
 
 ## Customization
 
-- **Subreddits & Categories:** Update \`SUBREDDITS\` and \`CATEGORIES\` in \`config.ts\`.
-- **Keywords:** Modify \`KEYWORDS\` in \`config.ts\`.
-- **Cron Schedule:** Change the cron expression in \`scheduler.ts\`.
-- **NLP Enhancements:** Add more advanced logic in \`analyzer.ts\` using \`compromise\` or other NLP libraries.
+- **Subreddits & Categories:** Update `SUBREDDITS` and `CATEGORIES` in `config.ts`.
+- **Keywords:** Modify `KEYWORDS` in `config.ts`.
+- **Cron Schedule:** Change the cron expression in `scheduler.ts`.
+- **NLP Enhancements:** Add more advanced logic in `analyzer.ts` using `compromise` or other NLP libraries.
 - **Database Integration:** Switch from file-based storage to a database if desired.
 
 ## Contributing
